@@ -1,0 +1,38 @@
+version: "3.8"
+
+services:
+  blender-api:
+    build: .
+    container_name: blender-api
+    restart: unless-stopped
+    volumes:
+      # Persist output files
+      - ./output:/app/output
+      - ./jobs:/app/jobs
+    environment:
+      - PYTHONUNBUFFERED=1
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.blender.rule=Host(`blender.jeffemmett.com`)"
+      - "traefik.http.services.blender.loadbalancer.server.port=8080"
+      # Enable CORS via Traefik middleware
+      - "traefik.http.middlewares.blender-cors.headers.accesscontrolallowmethods=GET,POST,OPTIONS"
+      - "traefik.http.middlewares.blender-cors.headers.accesscontrolallowheaders=*"
+      - "traefik.http.middlewares.blender-cors.headers.accesscontrolalloworiginlist=*"
+      - "traefik.http.middlewares.blender-cors.headers.accesscontrolmaxage=86400"
+      - "traefik.http.routers.blender.middlewares=blender-cors"
+    networks:
+      - traefik-public
+    # Resource limits for render operations
+    deploy:
+      resources:
+        limits:
+          cpus: "8"
+          memory: 16G
+        reservations:
+          cpus: "2"
+          memory: 4G
+
+networks:
+  traefik-public:
+    external: true
