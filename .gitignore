@@ -1,0 +1,40 @@
+# Blender installation (downloaded separately)
+blender-*/
+blender.tar.xz
+
+# Output files
+output/
+jobs/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+ENV/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.temp
+*.log
+
+# Blender autosave and backup
+*.blend1
+*.blend2
+*.blend3
+*.blend4
+*.blend5
