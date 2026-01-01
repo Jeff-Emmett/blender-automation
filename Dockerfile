@@ -24,11 +24,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libxxf86vm1 \
     libxfixes3 \
     libxrender1 \
-    libgl1-mesa-glx \
+    libgl1 \
     libglu1-mesa \
     libsm6 \
     libxkbcommon0 \
     libegl1 \
+    curl \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy Blender from builder
