@@ -21,6 +21,12 @@ services:
       - "traefik.http.middlewares.blender-cors.headers.accesscontrolalloworiginlist=*"
       - "traefik.http.middlewares.blender-cors.headers.accesscontrolmaxage=86400"
       - "traefik.http.routers.blender.middlewares=blender-cors"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://127.0.0.1:8080/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
     networks:
       - traefik-public
     # Resource limits for render operations
