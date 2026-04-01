@@ -9,8 +9,8 @@ on:
     branches: [main]
 
 env:
-  REGISTRY: gitea.jeffemmett.com
-  IMAGE: gitea.jeffemmett.com/jeffemmett/blender-automation
+  REGISTRY: localhost:3000
+  IMAGE: localhost:3000/jeffemmett/blender-automation
 
 jobs:
   deploy:
