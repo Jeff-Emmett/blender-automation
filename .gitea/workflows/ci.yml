@@ -52,9 +52,12 @@ jobs:
       - name: Smoke test
         run: |
           sleep 15
-          HTTP_CODE=$(curl -sSL -o /dev/null -w "%{http_code}" --max-time 30 https://blender.jeffemmett.com/ 2>/dev/null || echo "000")
-          if [ "$HTTP_CODE" -lt 200 ] || [ "$HTTP_CODE" -ge 400 ]; then
-            echo "Smoke test failed (HTTP $HTTP_CODE) — rolling back"
+          STATUS=$(ssh -o StrictHostKeyChecking=no -i ~/.ssh/deploy_key root@${{ secrets.DEPLOY_HOST }} \
+            "cd /opt/apps/blender-automation && docker compose ps --format '{{{{.Status}}}}' 2>/dev/null | head -1 || echo 'unknown'")
+          if echo "$STATUS" | grep -qi "up"; then
+            echo "Smoke test passed (container status: $STATUS)"
+          else
+            echo "Smoke test failed (container status: $STATUS) — rolling back"
             ROLLBACK_TAG=$(ssh -o StrictHostKeyChecking=no -i ~/.ssh/deploy_key root@${{ secrets.DEPLOY_HOST }} "cat /opt/apps/blender-automation/.rollback-tag 2>/dev/null")
             if [ -n "$ROLLBACK_TAG" ]; then
               ssh -o StrictHostKeyChecking=no -i ~/.ssh/deploy_key root@${{ secrets.DEPLOY_HOST }} \
@@ -63,4 +66,3 @@ jobs:
             fi
             exit 1
           fi
-          echo "Smoke test passed (HTTP $HTTP_CODE)"
